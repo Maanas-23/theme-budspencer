@@ -235,13 +235,13 @@ function d -d 'List directory history, jump to directory in list with d <number>
       set last_item '-'(expr $num_items - 1)
     end
     echo -en $budspencer_cursors[2]
-    set input_length (expr length (expr $num_items - 1))
-    read -p 'echo -n (set_color -b $budspencer_colors[2] $budspencer_colors[5])" ♻ Goto [e|0"$last_item"] "(set_color -b normal $budspencer_colors[2])" "(set_color $budspencer_colors[5])' -n $input_length -l dir_num
+    set input_length (string length -- (math $num_items - 1))
+    read -p 'echo -n (set_color -b $budspencer_colors[2] $budspencer_colors[5])" ♻ Goto [e|0"$last_item"] "(set_color -b normal $budspencer_colors[2])" "(set_color $budspencer_colors[5])' dir_num
     switch $dir_num
       case (seq 0 (expr $num_items - 1))
         cd $$dir_hist[1][(expr $num_items - $dir_num)]
       case 'e'
-        read -p 'echo -n (set_color -b $budspencer_colors[2] $budspencer_colors[5])" ♻ Erase [0"$last_item"] "(set_color -b normal $budspencer_colors[2])" "(set_color $budspencer_colors[5])' -n $input_length -l dir_num
+        read -p 'echo -n (set_color -b $budspencer_colors[2] $budspencer_colors[5])" ♻ Erase [0"$last_item"] "(set_color -b normal $budspencer_colors[2])" "(set_color $budspencer_colors[5])' dir_num
         set -e $dir_hist[1][(expr $num_items - $dir_num)] 2> /dev/null
         set dir_hist_val (count $$dir_hist)
         tput cuu1
@@ -313,7 +313,7 @@ function c -d 'List command history, load command from prompt with c <prompt num
   end
   echo -en $budspencer_cursors[4]
   set input_length (expr length (expr $num_items - 1))
-  read -p 'echo -n (set_color -b $budspencer_colors[2] $budspencer_colors[9])" ↩ Exec [e|0"$last_item"] "(set_color -b normal $budspencer_colors[2])" "(set_color $budspencer_colors[9])' -n $input_length -l cmd_num
+  read -p 'echo -n (set_color -b $budspencer_colors[2] $budspencer_colors[9])" ↩ Exec [e|0"$last_item"] "(set_color -b normal $budspencer_colors[2])" "(set_color $budspencer_colors[9])' -n $input_length -l cmd_num
   switch $cmd_num
     case (seq 0 (expr $num_items - 1))
       commandline $$cmd_hist[1][(expr $num_items - $cmd_num)]
@@ -322,7 +322,7 @@ function c -d 'List command history, load command from prompt with c <prompt num
         tput cuu1
       end
     case 'e'
-      read -p 'echo -n (set_color -b $budspencer_colors[2] $budspencer_colors[9])" ↩ Erase [0"$last_item"] "(set_color -b normal $budspencer_colors[2])" "(set_color $budspencer_colors[9])' -n $input_length -l cmd_num
+      read -p 'echo -n (set_color -b $budspencer_colors[2] $budspencer_colors[9])" ↩ Erase [0"$last_item"] "(set_color -b normal $budspencer_colors[2])" "(set_color $budspencer_colors[9])' -n $input_length -l cmd_num
       for i in (seq (count (echo $$cmd_hist\n)))
         tput cuu1
       end
@@ -395,8 +395,8 @@ function m -d 'List bookmarks, jump to directory in list with m <number>'
       set last_item '-'(expr $num_items - 1)
     end
     echo -en $budspencer_cursors[1]
-    set input_length (expr length (expr $num_items - 1))
-    read -p 'echo -n (set_color -b $budspencer_colors[2] $budspencer_colors[10])" ⌘ Goto [0"$last_item"] "(set_color -b normal $budspencer_colors[2])" "(set_color $budspencer_colors[10])' -n $input_length -l dir_num
+    set input_length (string length -- (math $num_items - 1))
+    read -p 'echo -n (set_color -b $budspencer_colors[2] $budspencer_colors[10])" ⌘ Goto [0"$last_item"] "(set_color -b normal $budspencer_colors[2])" "(set_color $budspencer_colors[10])' dir_num
     switch $dir_num
       case (seq 0 (expr $num_items - 1))
         cd $bookmarks[(expr $num_items - $dir_num)]
@@ -529,7 +529,7 @@ function s -d 'Create, delete or attach session'
     end
     echo -en $budspencer_cursors[3]
     set input_length (expr length (expr $num_items - 1))
-    read -p 'echo -n (set_color -b $budspencer_colors[2] $budspencer_colors[8])" ✻ Attach [e|0"$last_item"] "(set_color -b normal $budspencer_colors[2])" "(set_color $budspencer_colors[8])' -n $input_length -l session_num
+    read -p 'echo -n (set_color -b $budspencer_colors[2] $budspencer_colors[8])" ✻ Attach [e|0"$last_item"] "(set_color -b normal $budspencer_colors[2])" "(set_color $budspencer_colors[8])' -n $input_length -l session_num
     set pcount (expr $pcount - 1)
     switch $session_num
       case (seq 0 (expr $num_items - 1))
@@ -540,7 +540,7 @@ function s -d 'Create, delete or attach session'
         tput ed
         tput cuu1
       case 'e'
-        read -p 'echo -n (set_color -b $budspencer_colors[2] $budspencer_colors[8])" ✻ Erase [0"$last_item"] "(set_color -b normal $budspencer_colors[2])" "(set_color $budspencer_colors[8])' -n $input_length -l session_num
+        read -p 'echo -n (set_color -b $budspencer_colors[2] $budspencer_colors[8])" ✻ Erase [0"$last_item"] "(set_color -b normal $budspencer_colors[2])" "(set_color $budspencer_colors[8])' -n $input_length -l session_num
         if [ (expr $num_items - $session_num) -gt 0 ]
           __budspencer_erase_session -e $budspencer_sessions[(expr $num_items - $session_num)]
         end
